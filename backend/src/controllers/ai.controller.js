@@ -14,6 +14,7 @@ module.exports.getResponse = async (req, res) => {
         }
 
         const review = await aiService(code);
+        console.log(review);
 
         res.json({
             success: true,
