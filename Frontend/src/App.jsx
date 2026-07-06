@@ -1,46 +1,48 @@
 import { useState } from "react";
-import Editor from "react-simple-code-editor";
-import Prism from "prismjs";
-
-import "prismjs/themes/prism-tomorrow.css";
-import "prismjs/components/prism-javascript";
+import Markdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
+import "highlight.js/styles/github-dark.css";
+import axios from "axios";
 
 import "./App.css";
 
 function App() {
-  const [code, setCode] = useState(`function sum(a, b) {
-  return a + b;
+  const [code, setCode] = useState(`function sum() {
+  return 1 + 1;
 }`);
+
+  const [review, setReview] = useState("");
+
+  async function reviewCode() {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/ai/get-response",
+        { code }
+      );
+
+      setReview(response.data.review);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <main>
       <div className="left">
-        <Editor
+        <textarea
           value={code}
-          onValueChange={(value) => setCode(value)}
-          highlight={(value) =>
-            Prism.highlight(
-              value,
-              Prism.languages.javascript,
-              "javascript"
-            )
-          }
-          padding={15}
-          textareaClassName="editor"
-          preClassName="editor-highlight"
-          style={{
-            fontFamily: '"Fira Code", monospace',
-            fontSize: 16,
-            minHeight: "400px",
-            background: "#2d2d2d",
-            color: "#fff",
-            borderRadius: "8px",
-          }}
+          onChange={(e) => setCode(e.target.value)}
         />
+
+        <button className="review" onClick={reviewCode}>
+          Review
+        </button>
       </div>
 
       <div className="right">
-        Review
+        <Markdown rehypePlugins={[rehypeHighlight]}>
+          {review}
+        </Markdown>
       </div>
     </main>
   );

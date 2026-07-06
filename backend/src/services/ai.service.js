@@ -30,9 +30,10 @@ The response must contain these sections:
 ## Improved Code
 
 Rules:
-- Use Markdown headings (#, ##).
-- Use bullet points.
-- Wrap every code example inside triple backticks.
+IMPORTANT:
+Do not generate any corrected or improved code.
+Never include an "Improved Code" section.
+Only explain what is wrong and how it can be improved.
 - Example:
 
 \`\`\`javascript
