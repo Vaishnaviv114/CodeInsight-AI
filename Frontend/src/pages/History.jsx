@@ -1,9 +1,17 @@
 export default function History() {
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-      <h1 className="text-5xl font-bold text-white">
-        History
+    <div className="min-h-screen bg-[#09090F] text-white p-10">
+
+      <h1 className="text-4xl font-bold mb-6">
+        Review History
       </h1>
+
+      <div className="bg-[#14141d] border border-white/10 rounded-2xl p-8 text-gray-400">
+
+        No reviews yet.
+
+      </div>
+
     </div>
   );
 }

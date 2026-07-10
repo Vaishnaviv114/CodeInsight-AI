@@ -1,51 +1,94 @@
 import { useState } from "react";
-import Markdown from "react-markdown";
-import rehypeHighlight from "rehype-highlight";
-import "highlight.js/styles/github-dark.css";
 import axios from "axios";
 
-import "../App.css";
+import Sidebar from "../components/Sidebar";
+import CodeEditor from "../components/CodeEditor";
+import ReviewPanel from "../components/ReviewPanel";
 
-function Dashboard() {
-  const [code, setCode] = useState(`function sum() {
-  return 1 + 1;
+export default function Dashboard() {
+  const [language, setLanguage] = useState("javascript");
+
+  const [code, setCode] = useState(`function sum(a, b) {
+  return a + b;
 }`);
 
   const [review, setReview] = useState("");
 
+  const [loading, setLoading] = useState(false);
+
   async function reviewCode() {
+    if (!code.trim()) return;
+
     try {
+      setLoading(true);
+
       const response = await axios.post(
         "http://localhost:3000/ai/get-response",
-        { code }
+        {
+          code,
+          language,
+        }
       );
 
       setReview(response.data.review);
     } catch (error) {
       console.error(error);
+      alert("Failed to review code.");
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
-    <main>
-      <div className="left">
-        <textarea
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-        />
+    <div className="min-h-screen bg-[#09090F] flex">
 
-        <button className="review" onClick={reviewCode}>
-          Review
-        </button>
+      <Sidebar />
+
+      <div className="flex-1 p-8">
+
+        {/* Header */}
+
+        <div className="flex justify-between items-center mb-8">
+
+          <div>
+
+            <h1 className="text-4xl font-bold text-white">
+              AI Code Reviewer
+            </h1>
+
+           <p className="text-gray-400 mt-2">
+  Detect bugs, security issues and performance improvements using Gemini AI.
+</p>
+
+          </div>
+
+          <button
+            onClick={reviewCode}
+            disabled={loading}
+            className="bg-violet-600 hover:bg-violet-700 text-white px-8 py-4 rounded-xl font-semibold"
+          >
+            {loading ? "Reviewing..." : "✨ Review Code"}
+          </button>
+
+        </div>
+
+        {/* Main */}
+
+        <div className="grid lg:grid-cols-[1.2fr_1fr] gap-8 h-[78vh]">
+
+          <CodeEditor
+            code={code}
+            setCode={setCode}
+            language={language}
+            setLanguage={setLanguage}
+          />
+
+          <ReviewPanel review={review} />
+
+        </div>
+
       </div>
 
-      <div className="right">
-        <Markdown rehypePlugins={[rehypeHighlight]}>
-          {review}
-        </Markdown>
-      </div>
-    </main>
+    </div>
   );
 }
-
-export default Dashboard;
