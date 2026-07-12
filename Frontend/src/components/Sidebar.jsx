@@ -1,75 +1,101 @@
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   FiHome,
   FiClock,
   FiUser,
   FiLogOut,
+  FiCode,
 } from "react-icons/fi";
-import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Sidebar() {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const logout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("user");
     navigate("/login");
   };
 
-  const menu = [
-    {
-      name: "Dashboard",
-      icon: <FiHome />,
-      path: "/dashboard",
-    },
-    {
-      name: "History",
-      icon: <FiClock />,
-      path: "/history",
-    },
-    {
-      name: "Profile",
-      icon: <FiUser />,
-      path: "/profile",
-    },
-  ];
+  const linkClass = ({ isActive }) =>
+    `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+      isActive
+        ? "bg-violet-600 text-white shadow-lg"
+        : "text-gray-400 hover:bg-[#1b1b28] hover:text-white"
+    }`;
 
   return (
-    <div className="w-64 bg-[#111118] border-r border-white/10 flex flex-col justify-between">
+    <aside className="w-72 h-screen bg-[#0F0F18] border-r border-white/10 flex flex-col justify-between p-6">
 
       <div>
-        <h1 className="text-2xl font-bold text-violet-400 px-8 py-8">
-          CodeInsight AI
-        </h1>
 
-        <nav className="px-5 space-y-3">
+        {/* Logo */}
 
-          {menu.map((item) => (
-            <button
-              key={item.name}
-              onClick={() => navigate(item.path)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition ${
-                location.pathname === item.path
-                  ? "bg-violet-600 text-white"
-                  : "text-gray-300 hover:bg-white/5"
-              }`}
-            >
-              {item.icon}
-              {item.name}
-            </button>
-          ))}
+        <div className="flex items-center gap-3 mb-12">
+
+          <div className="w-12 h-12 rounded-xl bg-violet-600 flex items-center justify-center text-white text-xl font-bold">
+            <FiCode />
+          </div>
+
+          <div>
+            <h1 className="text-white text-2xl font-bold">
+              CodeInsight
+            </h1>
+
+            <p className="text-gray-500 text-sm">
+              AI Reviewer
+            </p>
+          </div>
+
+        </div>
+
+        {/* Menu */}
+
+        <nav className="space-y-3">
+
+          <NavLink to="/dashboard" className={linkClass}>
+            <FiHome size={20} />
+            Dashboard
+          </NavLink>
+
+          <NavLink to="/history" className={linkClass}>
+            <FiClock size={20} />
+            Review History
+          </NavLink>
+
+          <NavLink to="/profile" className={linkClass}>
+            <FiUser size={20} />
+            Profile
+          </NavLink>
 
         </nav>
+
       </div>
 
-      <button
-        onClick={logout}
-        className="m-5 flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 rounded-xl py-3 text-white"
-      >
-        <FiLogOut />
-        Logout
-      </button>
+      {/* Bottom */}
 
-    </div>
+      <div>
+
+        <div className="bg-[#171722] rounded-2xl p-4 mb-6">
+
+          <p className="text-white font-semibold">
+            Gemini AI
+          </p>
+
+          <p className="text-gray-500 text-sm mt-2">
+            Instant reviews with AI powered suggestions.
+          </p>
+
+        </div>
+
+        <button
+          onClick={logout}
+          className="w-full flex items-center justify-center gap-3 bg-red-500 hover:bg-red-600 transition text-white py-3 rounded-xl font-semibold"
+        >
+          <FiLogOut />
+          Logout
+        </button>
+
+      </div>
+
+    </aside>
   );
 }

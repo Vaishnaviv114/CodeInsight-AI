@@ -17,11 +17,15 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
 
   async function reviewCode() {
-    if (!code.trim()) return;
+    if (!code.trim()) {
+      alert("Please enter some code.");
+      return;
+    }
 
     try {
       setLoading(true);
 
+      // AI Review
       const response = await axios.post(
         "http://localhost:3000/ai/get-response",
         {
@@ -30,10 +34,36 @@ export default function Dashboard() {
         }
       );
 
-      setReview(response.data.review);
+      const aiReview = response.data.review;
+
+      setReview(aiReview);
+
+      // Save Review
+      const token = localStorage.getItem("token");
+
+      if (token) {
+        await axios.post(
+          "http://localhost:3000/review",
+          {
+            language,
+            code,
+            review: aiReview,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      }
     } catch (error) {
       console.error(error);
-      alert("Failed to review code.");
+
+      alert(
+        error.response?.data?.message ||
+          error.message ||
+          "Something went wrong."
+      );
     } finally {
       setLoading(false);
     }
@@ -41,38 +71,31 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-[#09090F] flex">
-
       <Sidebar />
 
       <div className="flex-1 p-8">
 
-        {/* Header */}
-
         <div className="flex justify-between items-center mb-8">
 
           <div>
-
             <h1 className="text-4xl font-bold text-white">
               AI Code Reviewer
             </h1>
 
-           <p className="text-gray-400 mt-2">
-  Detect bugs, security issues and performance improvements using Gemini AI.
-</p>
-
+            <p className="text-gray-400 mt-2">
+              Detect bugs, security issues and performance improvements using Gemini AI.
+            </p>
           </div>
 
           <button
             onClick={reviewCode}
             disabled={loading}
-            className="bg-violet-600 hover:bg-violet-700 text-white px-8 py-4 rounded-xl font-semibold"
+            className="bg-violet-600 hover:bg-violet-700 disabled:bg-violet-400 text-white px-8 py-4 rounded-xl font-semibold transition"
           >
             {loading ? "Reviewing..." : "✨ Review Code"}
           </button>
 
         </div>
-
-        {/* Main */}
 
         <div className="grid lg:grid-cols-[1.2fr_1fr] gap-8 h-[78vh]">
 
@@ -83,12 +106,14 @@ export default function Dashboard() {
             setLanguage={setLanguage}
           />
 
-          <ReviewPanel review={review} />
+          <ReviewPanel
+            review={review}
+            setReview={setReview}
+          />
 
         </div>
 
       </div>
-
     </div>
   );
 }
