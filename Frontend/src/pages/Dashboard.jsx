@@ -26,7 +26,7 @@ export default function Dashboard() {
       setLoading(true);
 
       const response = await axios.post(
-        "http://localhost:3000/ai/get-response",
+        "https://codeinsight-ai-backend-xml9.onrender.com",
         {
           code,
           language,

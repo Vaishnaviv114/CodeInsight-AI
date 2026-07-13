@@ -34,7 +34,7 @@ export default function Register() {
       setLoading(true);
 
       const response = await axios.post(
-        "http://localhost:3000/auth/register",
+        "https://codeinsight-ai-backend-xml9.onrender.com/auth/register",
         formData
       );
 

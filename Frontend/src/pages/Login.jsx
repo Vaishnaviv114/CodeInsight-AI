@@ -21,7 +21,7 @@ export default function Login() {
       setLoading(true);
 
       const response = await axios.post(
-        "http://localhost:3000/auth/login",
+        "https://codeinsight-ai-backend-xml9.onrender.com/auth/login",
         {
           email,
           password,
