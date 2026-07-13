@@ -25,7 +25,6 @@ export default function Dashboard() {
     try {
       setLoading(true);
 
-      // AI Review
       const response = await axios.post(
         "http://localhost:3000/ai/get-response",
         {
@@ -34,28 +33,7 @@ export default function Dashboard() {
         }
       );
 
-      const aiReview = response.data.review;
-
-      setReview(aiReview);
-
-      // Save Review
-      const token = localStorage.getItem("token");
-
-      if (token) {
-        await axios.post(
-          "http://localhost:3000/review",
-          {
-            language,
-            code,
-            review: aiReview,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-      }
+      setReview(response.data.review);
     } catch (error) {
       console.error(error);
 
@@ -74,16 +52,15 @@ export default function Dashboard() {
       <Sidebar />
 
       <div className="flex-1 p-8">
-
         <div className="flex justify-between items-center mb-8">
-
           <div>
             <h1 className="text-4xl font-bold text-white">
               AI Code Reviewer
             </h1>
 
             <p className="text-gray-400 mt-2">
-              Detect bugs, security issues and performance improvements using Gemini AI.
+              Detect bugs, security issues and performance improvements using
+              Gemini AI.
             </p>
           </div>
 
@@ -94,11 +71,9 @@ export default function Dashboard() {
           >
             {loading ? "Reviewing..." : "✨ Review Code"}
           </button>
-
         </div>
 
         <div className="grid lg:grid-cols-[1.2fr_1fr] gap-8 h-[78vh]">
-
           <CodeEditor
             code={code}
             setCode={setCode}
@@ -110,9 +85,7 @@ export default function Dashboard() {
             review={review}
             setReview={setReview}
           />
-
         </div>
-
       </div>
     </div>
   );

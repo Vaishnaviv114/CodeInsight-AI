@@ -5,7 +5,6 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Dashboard from "../pages/Dashboard";
 import Profile from "../pages/Profile";
-import History from "../pages/History";
 import ProtectedRoute from "../components/ProtectedRoute";
 
 function AppRoutes() {
@@ -29,15 +28,6 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <Profile />
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/history"
-        element={
-          <ProtectedRoute>
-            <History />
           </ProtectedRoute>
         }
       />

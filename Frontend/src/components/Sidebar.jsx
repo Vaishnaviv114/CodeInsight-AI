@@ -1,7 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   FiHome,
-  FiClock,
   FiUser,
   FiLogOut,
   FiCode,
@@ -54,11 +53,6 @@ export default function Sidebar() {
           <NavLink to="/dashboard" className={linkClass}>
             <FiHome size={20} />
             Dashboard
-          </NavLink>
-
-          <NavLink to="/history" className={linkClass}>
-            <FiClock size={20} />
-            Review History
           </NavLink>
 
           <NavLink to="/profile" className={linkClass}>
